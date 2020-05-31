@@ -73,8 +73,7 @@ invisibleBack.visible=false;
 backgroundRoad.y = backgroundRoad.height /2;
 backgroundRoad2.y = backgroundRoad2.height /2;
 
-car=createSprite(200,195,20,50);
-car.addImage(carImg);
+car=new PlayerCar();
 obstacleCarsGroup=new Group();
 
 life1=createSprite(650,200,20,20);
@@ -99,6 +98,8 @@ function draw(){
   background(0);
   text("SCORE "+count,600,100);
   textFont=35;
+  car.update();
+  car.show();
 if (gameState===PLAY) {
   count=count+Math.round(getFrameRate()/60);
   backgroundRoad.velocityY=5;
@@ -113,13 +114,13 @@ if (gameState===PLAY) {
   }
 
 if (keyIsDown(LEFT_ARROW)) {
-  car.velocityX=-2
+  car.move(-2,0)
 } else if(keyIsDown(RIGHT_ARROW)) {
-  car.velocityX=2
+  car.move(2,0)
 }
 
 spawnObstacleCars();
-if (obstacleCarsGroup.isTouching(car)) {
+if (car.touch(obstacleCarsGroup)) {
   gameState=END;
 }
 }
@@ -127,8 +128,7 @@ if (obstacleCarsGroup.isTouching(car)) {
 else if(gameState===END){
 backgroundRoad.velocityY=0;
 backgroundRoad2.velocityY=0;
-car.velocityX=0;
-car.velocityY=0;
+car.move(0,0);
 obstacleCarsGroup.setVelocityXEach(0);
 obstacleCarsGroup.setLifetimeEach(-1);
 restart.visible=true;
