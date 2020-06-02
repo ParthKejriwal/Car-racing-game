@@ -28,10 +28,6 @@ function draw() {
 
 var car;
 var carImg;
-var backgroundImg;
-var backgroundRoad;
-var invisibleBack;
-var backgroundRoad2;
 var obstacleCarsImg;
 var obstacleCarsGroup;
 var PLAY=1;
@@ -47,9 +43,11 @@ var gameOver="Game Over";
 var restartImg;
 var gameOverImg;
 lifeImages=[life1,life2,life3];
+var line;
+var obstacleCars=[];
 
 function preload(){
-  backgroundImg=loadImage("road.jpg");
+  roadImg=loadImage("yellow.png");
   carImg=loadImage("car1.png");
   obstacleCarsImg=loadImage("car1.png");
   lifeImg=loadImage("emoji4.png.jpg");
@@ -59,23 +57,8 @@ function preload(){
 
 function setup(){
 var canvas=createCanvas(800,400);
-//backgroundImg.scale=0.4
-
-backgroundRoad=createSprite(195,300,200,200);
-backgroundRoad.addImage(backgroundImg);
-
-backgroundRoad2=createSprite(195,200,400,400);
-backgroundRoad2.addImage(backgroundImg);
-
-invisibleBack=createSprite(195,400,400,400);
-invisibleBack.visible=false;
-
-backgroundRoad.y = backgroundRoad.height /2;
-backgroundRoad2.y = backgroundRoad2.height /2;
-
 car=new PlayerCar();
 obstacleCarsGroup=new Group();
-
 life1=createSprite(650,200,20,20);
 life2=createSprite(650,275,20,20);
 life3=createSprite(650,350,20,20);
@@ -91,43 +74,39 @@ restart.visible=false;
 gameOver=createSprite(200,100,20,20);
 //gameOver.addImage(gameOverImg);
 gameOver.visible=false;
-
+line=createSprite(550,200,20,400)
 }
 
 function draw(){
   background(0);
+  if (frameCount%60===0) {
+    obstacleCars.push(new ObstacleCars());
+  }
+  for (var i = 0; i < obstacleCars.length; i++) {
+    obstacleCars[i].show();
+    obstacleCars[i].move(0,-5);
+    obstacleCars[i].update(0,-5);  
+  }
   text("SCORE "+count,600,100);
   textFont=35;
+  spawnYellowLines();
   car.update();
   car.show();
+
 if (gameState===PLAY) {
   count=count+Math.round(getFrameRate()/60);
-  backgroundRoad.velocityY=5;
-
-  if (backgroundRoad.y>200) {
-    backgroundRoad.y = backgroundRoad.height /2;
-  }
-
-  backgroundRoad2.velocityY=5;
-  if (backgroundRoad2.y>370) {
-    backgroundRoad2.y = backgroundRoad2.height /2;
-  }
-
 if (keyIsDown(LEFT_ARROW)) {
   car.move(-2,0)
 } else if(keyIsDown(RIGHT_ARROW)) {
   car.move(2,0)
 }
 
-spawnObstacleCars();
 if (car.touch(obstacleCarsGroup)) {
   gameState=END;
 }
 }
 
 else if(gameState===END){
-backgroundRoad.velocityY=0;
-backgroundRoad2.velocityY=0;
 car.move(0,0);
 obstacleCarsGroup.setVelocityXEach(0);
 obstacleCarsGroup.setLifetimeEach(-1);
@@ -141,13 +120,23 @@ if(mousePressedOver(restart)) {
  drawSprites();
 }
 
-function spawnObstacleCars(){
+/*function spawnObstacleCars(){
   if (frameCount%100===0) {
     obstacleCars=createSprite(20,0,20,20);
     obstacleCars.x=random(50,350);
     obstacleCars.addImage(obstacleCarsImg);
     obstacleCars.velocityY=5;
     obstacleCarsGroup.add(obstacleCars);
+  }
+}*/
+
+function spawnYellowLines(){
+  if (frameCount%50===0) {
+    var yellowLine=createSprite(230,0,25,50);
+    yellowLine.velocityY=5;
+    yellowLine.shapeColor="yellow";
+    yellowLine.depth=car.depth;
+    car.depth=car.depth+1;
   }
 }
 

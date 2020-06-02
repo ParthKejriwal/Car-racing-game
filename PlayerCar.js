@@ -5,7 +5,7 @@ this.xspeed=1;
 this.yspeed=0;
 
 this.show=function(){
-image(carImg,this.x,this.y,20,50);
+image(carImg,this.x,this.y,50,80);
 }
 
 this.move=function(x,y){
