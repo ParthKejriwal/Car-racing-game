@@ -17,14 +17,4 @@ this.update=function(x,y){
     this.x=this.x+this.xspeed;
     this.x=this.x+this.xspeed;
 }
-
-this.touch=function(pos){
-   var d=dist(this.x,this.y,pos.x,pos.y);
-   if(d>1){
-    return true;
-   } else{
-    return false;
-   }
-}
-        
 }
